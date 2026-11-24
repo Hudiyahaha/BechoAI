@@ -5,10 +5,10 @@ BechoAI gives Instagram and WhatsApp clothing sellers in Islamabad and Rawalpind
 **Group:** Aleeza Akbar (231-0765) · Hudiya-e-Zehra (231-0761) · Abdul Ghufran (231-0576)
 
 **Live links**
-- Website: https://bechoai-api.onrender.com
-  - customer store: https://bechoai-api.onrender.com/s/noor-threads
-  - seller dashboard: https://bechoai-api.onrender.com/dashboard
-- Agent API: https://bechoai-api.onrender.com
+- Website (Vercel): https://bechoai-web.vercel.app
+  - customer store: https://bechoai-web.vercel.app/s/noor-threads
+  - seller dashboard: https://bechoai-web.vercel.app/dashboard
+- Agent API (Render): https://bechoai-api.onrender.com
   - `POST /chat`
   - `GET /health`
 
@@ -108,7 +108,7 @@ uvicorn app.main:app --reload
 
 **Deploy**
 - **Render:** New → Blueprint, then pick this repo. Render reads `render.yaml`. Set `ANTHROPIC_API_KEY` and `DATABASE_URL`; `JWT_SECRET` is generated automatically.
-- **Vercel:** import the repo with the root directory set to `web/`. Set `window.BECHOAI_API` in `web/config.js` to the Render URL.
+- **Vercel:** import the repo with the root directory set to `web/`. `web/config.js` points the site at the Render API.
 
 ## Demo
 
