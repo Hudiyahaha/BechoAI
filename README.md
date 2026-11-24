@@ -5,10 +5,10 @@ BechoAI gives Instagram and WhatsApp clothing sellers in Islamabad and Rawalpind
 **Group:** Aleeza Akbar (231-0765) · Hudiya-e-Zehra (231-0761) · Abdul Ghufran (231-0576)
 
 **Live links**
-- Website: `<VERCEL_OR_RENDER_URL>`
-  - customer store: `/s/noor-threads`
-  - seller dashboard: `/dashboard`
-- Agent API: `<RENDER_URL>`
+- Website: https://bechoai-api.onrender.com
+  - customer store: https://bechoai-api.onrender.com/s/noor-threads
+  - seller dashboard: https://bechoai-api.onrender.com/dashboard
+- Agent API: https://bechoai-api.onrender.com
   - `POST /chat`
   - `GET /health`
 
@@ -80,7 +80,7 @@ GET /health  → ok
 
 ## Benchmark
 
-The full test list is in [tests.json](tests.json). It was run with real Haiku using `python -m scripts.check_deploy <base-url>`.
+The full test list is in [tests.json](tests.json). It was run with real Haiku against the live Render API using `python -m scripts.check_deploy <base-url>`.
 
 | Area | Checks | Passed |
 |---|---|---|
@@ -92,7 +92,7 @@ The full test list is in [tests.json](tests.json). It was run with real Haiku us
 | Safety (prompt injection, off-topic) | 2 | 2 |
 | **Total** | **10** | **10 (100%)** |
 
-**Cost:** about **$0.004 for the 9-message run** (23.8k input / 2.6k output tokens). Prompts are short, the router runs at low effort and the guard is regex-based, so it makes no model call.
+**Cost:** about **$0.004 for the 9-message run** (24.4k input / 3.0k output tokens). Prompts are short, the router runs at low effort and the guard is regex-based, so it makes no model call.
 
 There are also 129 offline unit tests that use a fake model: `pytest -q`.
 
