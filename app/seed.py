@@ -40,6 +40,7 @@ def seed(store: dict = DEMO_STORE, products: list = DEMO_PRODUCTS):
         if s.get(Store, store["id"]):
             return False
         s.add(Store(**store))
+        s.flush()                      # Postgres enforces the foreign key: store row first
         for sku, name, category, color, price, stock, desc in products:
             s.add(Product(store_id=store["id"], sku=sku, name=name, category=category, color=color,
                           price=price, stock=stock, description=desc))

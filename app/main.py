@@ -122,8 +122,10 @@ def signup(body: SignupIn, s=Depends(get_db)):
     store = Store(id=services.make_store_id(s, body.store_name), name=body.store_name.strip(),
                   delivery_fees={}, default_delivery_fee=services.DEFAULT_DELIVERY_FEE)
     seller = Seller(email=email, password_hash=hash_password(body.password), store_id=store.id)
-    s.add_all([store, seller])
     try:
+        s.add(store)
+        s.flush()                                   # store row first: Postgres enforces the foreign key
+        s.add(seller)
         s.commit()
     except IntegrityError:
         s.rollback()
