@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BechoAI · AI sales assistant for small sellers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .land { max-width: 1040px; margin: 0 auto; padding: 32px 16px 60px; }
+    .land .hero { padding: 40px 32px; }
+    .land .hero h1 { font-size: clamp(28px, 5vw, 42px); max-width: 720px; }
+    .land .hero p { font-size: 17px; max-width: 640px; }
+    .cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .features .card, .plans .card { padding: 20px; }
+    .features h3, .plans h3 { font-size: 17px; margin-bottom: 6px; }
+    .features p, .plans p { margin: 0; color: var(--muted); }
+    .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .plans .v { font-size: 28px; font-weight: 800; margin: 6px 0; }
+    @media (max-width: 760px) { .features, .plans { grid-template-columns: 1fr; } .land .hero { padding: 28px 20px; } }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo"><span class="mark">B</span><div>BechoAI<small>Sell while you sleep</small></div></div>
+    <a class="btn small" href="/dashboard">Seller login</a>
+  </div>
+  <main class="land">
+    <section class="hero">
+      <h1>An AI salesperson for your Instagram and WhatsApp clothing store</h1>
+      <p>BechoAI answers customers 24/7 in English and Roman Urdu, recommends outfits from your real stock,
+        suggests a matching dupatta or trouser, and takes cash-on-delivery orders that you approve.</p>
+      <div class="cta">
+        <a class="btn primary" href="/s/noor-threads">Try the demo store</a>
+        <a class="btn" href="/dashboard">Start 14-day free trial</a>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="card"><h3>💬 Answers and recommends</h3><p>Searches your catalog by colour, size, budget and occasion, and only suggests what is in stock.</p></div>
+      <div class="card"><h3>🧠 Remembers each customer</h3><p>Remembers sizes and favourite colours across chats, never phone numbers or addresses.</p></div>
+      <div class="card"><h3>✅ You stay in control</h3><p>The customer confirms every order, then you approve or reject it from your dashboard.</p></div>
+    </section>
+
+    <section class="plans">
+      <div class="card"><h3>Starter</h3><div class="v">Rs 2,500<span class="muted" style="font-size:15px;font-weight:500"> / month</span></div><p>One store, AI assistant, order approvals, CSV catalog upload.</p></div>
+      <div class="card"><h3>Growth</h3><div class="v">Rs 6,000<span class="muted" style="font-size:15px;font-weight:500"> / month</span></div><p>Everything in Starter plus higher chat limits and sales insights.</p></div>
+    </section>
+  </main>
+</body>
+</html>

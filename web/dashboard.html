@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seller Dashboard · BechoAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="topbar">
+    <a class="logo" href="/" style="text-decoration:none;color:inherit"><span class="mark">B</span><div><span id="store-title">BechoAI</span><small>Seller dashboard</small></div></a>
+    <div id="top-actions" class="hidden" style="display:flex;gap:8px">
+      <a class="btn small" id="store-link" target="_blank" rel="noopener">View my store ↗</a>
+      <button class="btn small" id="logout">Log out</button>
+    </div>
+  </div>
+
+  <!-- login / signup -->
+  <section class="auth card hidden" id="auth">
+    <h1 id="auth-title">Log in</h1>
+    <p class="muted" id="auth-sub">Manage your catalog, approve orders and read your AI assistant's chats.</p>
+    <form id="auth-form">
+      <div id="store-name-field" class="hidden"><label for="a-store">Store name</label><input id="a-store" maxlength="80"></div>
+      <div><label for="a-email">Email</label><input id="a-email" type="email" required autocomplete="email"></div>
+      <div><label for="a-pass">Password (8+ characters)</label><input id="a-pass" type="password" required minlength="8" autocomplete="current-password"></div>
+      <div class="error" id="auth-error"></div>
+      <button class="btn primary" id="auth-submit">Log in</button>
+    </form>
+    <p class="muted" style="font-size:14px;margin-top:14px"><span id="auth-switch-text">New seller?</span> <a href="#" id="auth-switch">Create a store (14-day free trial)</a></p>
+  </section>
+
+  <!-- dashboard -->
+  <div class="dash hidden" id="dash">
+    <nav class="side" aria-label="Sections">
+      <button data-tab="overview" class="active">Overview</button>
+      <button data-tab="orders">Orders <span id="pending-count" class="badge awaiting_approval hidden"></span></button>
+      <button data-tab="products">Products</button>
+      <button data-tab="chats">Conversations</button>
+      <button data-tab="settings">Settings</button>
+    </nav>
+    <main class="main">
+      <section data-panel="overview">
+        <h2>Overview</h2>
+        <div class="kpis" id="kpis"></div>
+        <div class="form-grid">
+          <div class="card" style="padding:16px"><h3 style="font-size:16px;margin-bottom:8px">Top sellers (approved)</h3><div id="top-products"></div></div>
+          <div class="card" style="padding:16px"><h3 style="font-size:16px;margin-bottom:8px">Low stock (2 or fewer)</h3><div id="low-stock"></div></div>
+        </div>
+      </section>
+
+      <section data-panel="orders" class="hidden">
+        <h2>Orders</h2>
+        <div class="toolbar">
+          <select id="order-filter" style="width:auto" aria-label="Filter by status">
+            <option value="awaiting_approval">Waiting for approval</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="">All orders</option>
+          </select>
+          <button class="btn small" id="orders-refresh">Refresh</button>
+        </div>
+        <div class="card table-wrap"><table>
+          <thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table></div>
+      </section>
+
+      <section data-panel="products" class="hidden">
+        <h2>Products</h2>
+        <div class="toolbar">
+          <button class="btn primary small" id="add-product">+ Add product</button>
+          <label class="btn small" style="margin:0;color:var(--text)">Upload CSV<input type="file" id="csv" accept=".csv,text/csv" class="hidden"></label>
+          <span class="muted" style="font-size:13px">CSV columns: sku,name,category,color,price,stock,description,image_url · stock like <code>S:2;M:5</code> or <code>8</code></span>
+        </div>
+        <div class="notice hidden" id="csv-result" style="margin-bottom:12px"></div>
+        <div class="card table-wrap"><table>
+          <thead><tr><th>Code</th><th>Name</th><th>Category</th><th>Colour</th><th>Price</th><th>Stock</th><th></th></tr></thead>
+          <tbody id="products-body"></tbody>
+        </table></div>
+      </section>
+
+      <section data-panel="chats" class="hidden">
+        <h2>Conversations</h2>
+        <p class="muted" style="margin-top:-8px">What customers asked your assistant. Customers are anonymous; only their last 6 ID characters are shown.</p>
+        <div class="card table-wrap"><table>
+          <thead><tr><th>Updated</th><th>Customer</th><th>Last message</th><th>Messages</th><th></th></tr></thead>
+          <tbody id="chats-body"></tbody>
+        </table></div>
+      </section>
+
+      <section data-panel="settings" class="hidden">
+        <h2>Settings</h2>
+        <form class="card" id="settings-form" style="padding:20px;display:grid;gap:12px;max-width:560px">
+          <div><label for="s-name">Store name</label><input id="s-name" required minlength="2" maxlength="80"></div>
+          <div><label for="s-fees">Delivery fee by city (one per line: <code>city: fee</code>)</label><textarea id="s-fees" rows="5"></textarea></div>
+          <div><label for="s-default">Delivery fee for other cities (Rs)</label><input id="s-default" type="number" min="0" required></div>
+          <div class="error" id="settings-msg"></div>
+          <div><button class="btn primary">Save settings</button></div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="product-dialog"><div class="body">
+    <button class="btn small close" data-close type="button">✕</button>
+    <h2 style="font-size:18px;margin-bottom:12px" id="pd-title">Add product</h2>
+    <form id="product-form" style="display:grid;gap:12px">
+      <div class="form-grid">
+        <div><label for="p-sku">Code</label><input id="p-sku" required maxlength="20" placeholder="NT-601"></div>
+        <div><label for="p-price">Price (Rs)</label><input id="p-price" type="number" min="1" required></div>
+        <div><label for="p-name">Name</label><input id="p-name" required minlength="2" maxlength="120"></div>
+        <div><label for="p-category">Category</label><input id="p-category" required minlength="2" maxlength="40" placeholder="kurta"></div>
+        <div><label for="p-color">Colour</label><input id="p-color" required minlength="2" maxlength="40"></div>
+        <div><label for="p-stock">Stock per size</label><input id="p-stock" required placeholder="S:2, M:5  or  ONE SIZE:8"></div>
+      </div>
+      <div><label for="p-desc">Description (the assistant uses this to answer questions)</label><textarea id="p-desc" rows="3" maxlength="500"></textarea></div>
+      <div><label for="p-image">Image URL (optional)</label><input id="p-image" type="url" maxlength="500"></div>
+      <div class="error" id="product-error"></div>
+      <div><button class="btn primary">Save product</button></div>
+    </form>
+  </div></dialog>
+
+  <dialog id="chat-dialog"><div class="body">
+    <button class="btn small close" data-close type="button">✕</button>
+    <h2 style="font-size:18px;margin-bottom:12px">Conversation</h2>
+    <div class="transcript" id="transcript"></div>
+  </div></dialog>
+
+  <script src="/config.js"></script>
+  <script src="/common.js"></script>
+  <script src="/dashboard.js"></script>
+</body>
+</html>
