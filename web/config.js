@@ -1,3 +1,2 @@
-// Where the BechoAI API lives. Empty = same server (local dev, FastAPI serves this folder).
-// For Vercel, set it to your Render URL, e.g. "https://bechoai-api.onrender.com" (no trailing slash).
-window.BECHOAI_API = "";
+// Where the BechoAI API lives: same server when run locally, the Render API everywhere else (Vercel, Render).
+window.BECHOAI_API = ["localhost", "127.0.0.1"].includes(location.hostname) ? "" : "https://bechoai-api.onrender.com";
