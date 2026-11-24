@@ -1,0 +1,20 @@
+# Render Blueprint: the BechoAI agent API (free tier). Secrets are entered in the Render dashboard, not here.
+services:
+  - type: web
+    name: bechoai-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # paste your group's key in the Render dashboard
+      - key: DATABASE_URL
+        sync: false          # Supabase "Session pooler" connection string
+      - key: JWT_SECRET
+        generateValue: true  # Render generates a random secret
+      - key: DEFAULT_STORE_ID
+        value: noor-threads
+      - key: CORS_ORIGINS
+        value: "*"

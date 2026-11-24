@@ -7,6 +7,7 @@
 """
 import re
 from typing import Literal, NotRequired
+from urllib.parse import quote
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware
@@ -32,8 +33,13 @@ DO_NOT_SAVE = [
 ]
 
 
+def safe_label(value: str) -> str:
+    """Store namespace labels can't contain '.', and ':' / '/' are escaped too, so IDs can't collide."""
+    return quote(value, safe="").replace(".", "%2E")
+
+
 def namespace(ctx: ShopContext) -> tuple:
-    return ("memories", ctx.store_id, ctx.user_id)
+    return ("memories", safe_label(ctx.store_id), safe_label(ctx.user_id))
 
 
 def save_fact(store, ctx: ShopContext, kind: str, value: str) -> str:

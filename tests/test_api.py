@@ -116,7 +116,7 @@ def test_order_needs_customer_confirmation_then_seller_approval(client):
     set_graph([tool_call("place_order", ORDER, 1), AIMessage("Order received, waiting for the seller.")])
     h, seller = customer(client), demo_seller(client)
     r = client.post(f"/api/stores/{STORE}/chat", json={"chat_id": "c1", "message": "buy NT-202"}, headers=h).json()
-    assert r["pending_order"]["total"] == 2700 and r["reply"] == "Please confirm your order below."
+    assert r["pending_order"]["total"] == 2700 and "Reply **YES** to confirm" in r["reply"]
     assert client.get("/api/seller/orders", headers=seller).json() == []                       # nothing yet
     r = client.post(f"/api/stores/{STORE}/chat/confirm", json={"chat_id": "c1", "confirmed": True}, headers=h).json()
     assert r["reply"] == "Order received, waiting for the seller." and r["pending_order"] is None

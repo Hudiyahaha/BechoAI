@@ -45,7 +45,7 @@ class Order(Base):
     __tablename__ = "orders"
     id: Mapped[int] = mapped_column(primary_key=True)
     store_id: Mapped[str] = mapped_column(ForeignKey("stores.id"), index=True)
-    user_id: Mapped[str] = mapped_column(String(64), index=True)
+    user_id: Mapped[str] = mapped_column(String(200), index=True)
     customer_name: Mapped[str]
     phone: Mapped[str]
     address: Mapped[str]
@@ -86,18 +86,33 @@ class Conversation(Base):
     __tablename__ = "conversations"
     thread_id: Mapped[str] = mapped_column(String(200), primary_key=True)
     store_id: Mapped[str] = mapped_column(ForeignKey("stores.id"), index=True)
-    user_id: Mapped[str] = mapped_column(String(64), index=True)
+    user_id: Mapped[str] = mapped_column(String(200), index=True)
     last_message: Mapped[str] = mapped_column(default="")
     turns: Mapped[int] = mapped_column(default=0)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
+def postgres_url() -> str | None:
+    """The Postgres URL (Supabase pooler) if one is configured, in plain psycopg form."""
+    url = os.getenv("DATABASE_URL") or ""
+    if url.startswith(("postgres://", "postgresql://", "postgresql+psycopg://")):
+        return "postgresql://" + url.split("://", 1)[1]
+    return None
+
+
 def configure(url: str | None = None):
     """(Re)connect to a database and create the tables. Tests call this with a temp DB."""
     global engine, SessionLocal
-    engine = create_engine(url or os.getenv("DATABASE_URL") or DEFAULT_URL)
+    url = url or os.getenv("DATABASE_URL") or DEFAULT_URL
+    if url.startswith(("postgres://", "postgresql://")):
+        # SQLAlchemy needs the psycopg driver named; poolers (Supabase/pgbouncer) don't allow prepared statements.
+        engine = create_engine("postgresql+psycopg://" + url.split("://", 1)[1], pool_pre_ping=True,
+                               pool_size=5, max_overflow=5, connect_args={"prepare_threshold": None})
+    else:
+        engine = create_engine(url)
     SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
     Base.metadata.create_all(engine)
+    return engine
 
 
 def session():

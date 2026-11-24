@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Store · BechoAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo"><span class="mark">B</span><div><span id="store-name">Loading…</span><small>Powered by BechoAI</small></div></div>
+    <button class="btn small" id="orders-btn">My orders</button>
+  </div>
+
+  <main class="store">
+    <section>
+      <div class="hero">
+        <h1 id="hero-title">Welcome</h1>
+        <p>Browse the collection or ask our assistant, in English or Roman Urdu. Cash on delivery.</p>
+      </div>
+      <div class="filters" role="search">
+        <input type="search" id="f-query" placeholder="Search e.g. embroidered, eid, lawn" aria-label="Search">
+        <select id="f-category" aria-label="Category"><option value="">All categories</option></select>
+        <select id="f-color" aria-label="Colour"><option value="">All colours</option></select>
+        <select id="f-size" aria-label="Size">
+          <option value="">Any size</option><option>S</option><option>M</option><option>L</option><option>XL</option>
+        </select>
+        <input type="number" id="f-max" placeholder="Max price (Rs)" min="0" step="500" aria-label="Max price">
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <aside class="chat card" id="chat" aria-label="Shopping assistant">
+      <header>
+        <div><h2>Shopping assistant</h2><span class="muted" style="font-size:13px">Answers, recommends and takes orders</span></div>
+        <button class="btn small" id="chat-close" aria-label="Close chat">✕</button>
+      </header>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="suggest" id="suggest">
+        <button>Eid ke liye red mein kuch dikhao under 5000</button>
+        <button>Show me kurtas in size M</button>
+        <button>Where is my order?</button>
+      </div>
+      <form class="composer" id="composer">
+        <input id="input" autocomplete="off" maxlength="1000" placeholder="Type a message…" aria-label="Message">
+        <button class="btn primary" id="send">Send</button>
+      </form>
+    </aside>
+  </main>
+  <button class="btn primary chat-fab" id="chat-fab">💬 Chat with us</button>
+
+  <dialog id="product-dialog"><div class="body" id="product-body"></div></dialog>
+  <dialog id="orders-dialog"><div class="body">
+    <button class="btn small close" data-close>✕</button>
+    <h2 style="font-size:18px;margin-bottom:8px">My orders</h2>
+    <div id="orders-list"></div>
+  </div></dialog>
+
+  <script src="/config.js"></script>
+  <script src="/common.js"></script>
+  <script src="/store.js"></script>
+</body>
+</html>

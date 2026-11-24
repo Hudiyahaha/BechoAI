@@ -92,8 +92,10 @@ def place_order(items: list[CartItem], customer_name: str, phone: str, address: 
         return str(e)
 
     # Human-in-the-loop #1: the customer confirms in the UI. Nothing is saved before this.
+    args = {"items": cart, "customer_name": customer_name, "phone": phone, "address": address, "city": city}
     answer = interrupt({"type": "confirm_order", "summary": _fmt_quote(quote), "total": quote["total"],
-                        "customer_name": customer_name, "phone": phone, "address": address, "city": city})
+                        "customer_name": customer_name, "phone": phone, "address": address, "city": city,
+                        "args": args})
     if not (isinstance(answer, dict) and answer.get("confirmed") is True):
         return "The customer did not confirm. No order was placed."
 

@@ -64,6 +64,20 @@ class SettingsIn(BaseModel):
     default_delivery_fee: int = Field(ge=0, le=100_000)
 
 
+# ── graded agent API (format fixed by the hackathon) ──
+
+class AgentChatIn(BaseModel):
+    user_id: str = Field(min_length=1, max_length=200)
+    thread_id: str = Field(min_length=1, max_length=200)
+    message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
+
+
+class AgentChatOut(BaseModel):
+    reply: str
+    tool_calls: list[dict]
+    tokens: dict[str, int]                    # {"in": ..., "out": ...}
+
+
 # ── chat ──
 
 class ChatIn(BaseModel):

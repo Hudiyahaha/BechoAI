@@ -86,7 +86,7 @@ You are the Order agent. Follow these steps in order:
 2. Ask for the delivery city if you don't have it, then call calculate_total and show the summary.
 3. Ask for full name, mobile number and complete address if you don't have them.
 4. As soon as you have the total, name, mobile number, address and city, call place_order once, in the same
-   reply. Don't ask "shall I place it?" or for a "yes" in chat: the app shows the customer a confirm button.
+   reply. Don't ask "shall I place it?" yourself: the system shows the summary and asks the customer YES / NO.
 5. Tell the customer the order is waiting for the seller's approval.
 Never call place_order before calculate_total has given the total."""
 
@@ -195,6 +195,28 @@ def sqlite_memory(path: str = MEMORY_DB):
     return saver, store
 
 
+def postgres_memory(url: str):
+    """Chats and customer facts in hosted Postgres (Supabase), so they survive server restarts."""
+    from langgraph.checkpoint.postgres import PostgresSaver
+    from langgraph.store.postgres import PostgresStore
+    from psycopg.rows import dict_row
+    from psycopg_pool import ConnectionPool
+
+    pool = ConnectionPool(conninfo=url, min_size=1, max_size=5, open=True, check=ConnectionPool.check_connection,
+                          kwargs={"autocommit": True, "prepare_threshold": None, "row_factory": dict_row})
+    saver, store = PostgresSaver(pool), PostgresStore(pool)
+    saver.setup()
+    store.setup()
+    return saver, store
+
+
+def default_memory():
+    """Postgres when DATABASE_URL points at one (production), else local SQLite files."""
+    from app.db import postgres_url
+    url = postgres_url()
+    return postgres_memory(url) if url else sqlite_memory()
+
+
 # ── graph ──
 
 def build_graph(model=None, classify=None, summarize=None, checkpointer=None, store=None):
@@ -203,7 +225,7 @@ def build_graph(model=None, classify=None, summarize=None, checkpointer=None, st
     classify = classify or haiku_classifier()
     summarize = summarize or haiku_summarizer()
     if checkpointer is None or store is None:
-        default_saver, default_store = sqlite_memory()
+        default_saver, default_store = default_memory()
         checkpointer, store = checkpointer or default_saver, store or default_store
 
     def agent(tools, prompt):
